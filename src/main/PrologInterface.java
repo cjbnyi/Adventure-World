@@ -1,6 +1,7 @@
 package src.main;
 
 import java.util.Scanner;
+import org.jpl7.*;
 
 public class PrologInterface {
 
