@@ -1,41 +1,80 @@
 package src.main;
 
-import java.util.Scanner;
-import org.jpl7.*;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class PrologInterface {
 
-    public static final int NUM_ROWS = 5;
-    public static final int NUM_COLUMNS = 5;
+    /**
+     * Encodes full map information given a FileReader to the chosen map .txt file.
+     */
+    public void encodeFullMapInformation(FileReader fileReader) {
 
-    public PrologInterface() {
+        int character;
+
+        int currRow = 0;
+        int currColumn = 0;
+        int numRows, numColumns;
+
+        int xHome = 0;
+        int yHome = 0;
+        char[][] mapInfo = new char[Map.MAX_ROWS][Map.MAX_COLUMNS];
+
+        // Extracts information from the map one character at a time via fileReader.
+        do {
+            try {
+                character = fileReader.read();
+            } catch (IOException e) {
+                e.printStackTrace(); // TODO (optional): Replace with more robust logging.
+                character = -1;
+            }
+
+            if (Map.isValidMapCellChar(character)) {
+                if (character == Map.HOME_CELL) {
+                    xHome = currRow;
+                    yHome = currColumn;
+                }
+                mapInfo[currRow][currColumn++] = (char) character;
+            }
+            else if (character == '\n') {
+                currRow++;
+                currColumn = 0;
+            }
+        } while (character != -1);
+
+        numRows = currRow + 1;
+        numColumns = currColumn;
+        Map.initializeInstance(numRows, numColumns, mapInfo);
+        Agent.initializeInstance(new Coordinates(xHome, yHome));
+
+        // For debugging purposes
+        Map.printMapInformation();
+        Agent.printAgentInformation();
+    }
+
+    // TODO
+    /**
+     * Queries the knowledge base for new information given a player move.
+     */
+    public void queryNewInformation() {
 
     }
 
     // TODO
     /**
-     * Encodes full map information.
+     * Updates the agent given new information.
      */
-    public void encodeFullMapInformation(Scanner scanner) {
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            System.out.println(line);
-        }
-    }
-
-    // TODO
-    /**
-     * Updates known map information.
-     */
-    public void updateKnownMapInformation() {
+    public void updateAgent() {
 
     }
 
     // TODO
     /**
-     * Adds a fact to the knowledge base.
+     * Updates the knowledge base given new information.
      */
-    public static void addFact(String fact) {
+    public static void updateKnowledgeBase() {
 
     }
+
+    // TODO: Feel free to add/remove/modify methods here as you deem appropriate.
 }

@@ -2,14 +2,15 @@ package src.main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.Scanner;
 
 public class Controller {
 
-    public static final String MAP_DIRECTORY = "resources/maps/";
+    private final String MAP_DIRECTORY = "resources/maps/";
 
-    private Model model;
-    private View view;
+    private final Model model;
+    private final View view;
 
     public Controller(Model model, View view) {
         this.model = model;
@@ -20,7 +21,7 @@ public class Controller {
         Scanner inputScanner = new Scanner(System.in);
         String mapName;
         String filePath;
-        Scanner fileScanner;
+        FileReader fileReader;
 
         System.out.print("Enter map name: ");
         mapName = inputScanner.nextLine();
@@ -30,12 +31,12 @@ public class Controller {
         File file = new File(filePath);
         if (!file.exists()) {
             // TODO: Nonexistent file case handling.
-            System.out.println("File nonexistent."); // debug
+            System.out.println("\nFile nonexistent."); // debug
             return;
         }
+        System.out.println("\nFile exists."); // debug
 
-        System.out.println("File exists."); // debug
-        fileScanner = new Scanner(file);
-        model.encodeFullMapInformation(fileScanner);
+        fileReader = new FileReader(file);
+        model.encodeFullMapInformation(fileReader);
     }
 }
