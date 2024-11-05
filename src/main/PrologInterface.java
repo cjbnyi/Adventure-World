@@ -5,12 +5,15 @@ import org.jpl7.*;
 
 public class PrologInterface {
 
-    public static final int NUM_ROWS = 5;
-    public static final int NUM_COLUMNS = 5;
-
     public PrologInterface() {
 
     }
+
+    // TODO
+    /**
+     * Gets both full and known map information.
+     */
+
 
     // TODO
     /**

@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Controller {
 
-    public static final String MAP_DIRECTORY = "resources/maps/";
+    private final String MAP_DIRECTORY = "resources/maps/";
 
     private Model model;
     private View view;

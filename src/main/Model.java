@@ -13,4 +13,12 @@ public class Model {
     public void encodeFullMapInformation(Scanner scanner) {
         prologInterface.encodeFullMapInformation(scanner);
     }
+
+    public void getFullMapInformation() {
+
+    }
+
+    public void getAgentKnowledge() {
+
+    }
 }
