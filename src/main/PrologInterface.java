@@ -1,7 +1,9 @@
 package src.main;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map;
 
 public class PrologInterface {
 
@@ -50,6 +52,9 @@ public class PrologInterface {
         // For debugging purposes
         Map.printMapInformation();
         Agent.printAgentInformation();
+
+        // Implement into the knowledge_base.pl
+        updateKnowledgeBase();
     }
 
     // TODO
@@ -72,8 +77,34 @@ public class PrologInterface {
     /**
      * Updates the knowledge base given new information.
      */
-    public static void updateKnowledgeBase() {
 
+     /*
+      * CURRENT IMPLEMENTATION:
+      * Finds home, gold, and pits then adds to the knowledge_base.pl
+      */
+    public static void updateKnowledgeBase(char[][] mapInfo, int numRows, int numColum) {
+        FileWriter writer = new FileWriter("knowledge_base.pl", false);
+        writer.write("");
+
+        for(int i=0; i<numRows; i++){
+            for(int j=0; j<numCol; j++){
+                switch(mapInfo[i][j]){
+                    // currently uses 1-based index in knowledge base
+                    // update if necessary
+                    case 'P':
+                        writer.write("pit(%d, %d).", i+1, j+1);
+                        break;
+                    case 'G':
+                        writer.write("gold(%d, %d).", i+1, j+1);
+                        break;
+                    case 'H':
+                        writer.write("home(%d, %d).", i+1, j+1);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     // TODO: Feel free to add/remove/modify methods here as you deem appropriate.
