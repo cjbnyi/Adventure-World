@@ -1,6 +1,7 @@
 package src.main;
 
 import java.io.FileNotFoundException;
+import src.gui.GUIController;
 
 public class Driver {
 
@@ -8,7 +9,8 @@ public class Driver {
 
         Model model = new Model();
         Controller controller = new Controller(model);
-
+        
         controller.start();
+        GUIController guiController = new GUIController();
     }
 }
