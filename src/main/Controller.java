@@ -10,11 +10,9 @@ public class Controller {
     private final String MAP_DIRECTORY = "resources/maps/";
 
     private final Model model;
-    private final View view;
 
-    public Controller(Model model, View view) {
+    public Controller(Model model) {
         this.model = model;
-        this.view = view;
     }
 
     public void start() throws FileNotFoundException {

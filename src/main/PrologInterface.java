@@ -2,6 +2,7 @@ package src.main;
 
 import java.io.FileReader;
 import java.io.IOException;
+import src.gui.GUIController;
 
 public class PrologInterface {
 
@@ -46,6 +47,7 @@ public class PrologInterface {
         numColumns = currColumn;
         Map.initializeInstance(numRows, numColumns, mapInfo);
         Agent.initializeInstance(new Coordinates(xHome, yHome));
+        GUIController guiController = new GUIController();
 
         // For debugging purposes
         Map.printMapInformation();

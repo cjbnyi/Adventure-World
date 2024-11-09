@@ -17,6 +17,7 @@ public class Agent {
     private final ArrayList<Coordinates> knownPitCoordinates;
     private final ArrayList<Coordinates> knownBreezeCoordinates;
     private final ArrayList<Coordinates> knownGoldCoordinates;
+    private final ArrayList<Coordinates> grabbedGoldCoordinates;
 
     private Agent(Coordinates homeCoordinates) {
         this.playerCoordinates = homeCoordinates;
@@ -24,6 +25,7 @@ public class Agent {
         this.knownPitCoordinates = new ArrayList<>();
         this.knownBreezeCoordinates = new ArrayList<>();
         this.knownGoldCoordinates = new ArrayList<>();
+        this.grabbedGoldCoordinates = new ArrayList<>();
     }
 
     public static void initializeInstance(Coordinates homeCoordinates) {
@@ -63,6 +65,14 @@ public class Agent {
         return Collections.unmodifiableList(knownGoldCoordinates);
     }
 
+    public int getNumOfGold() {
+        return this.grabbedGoldCoordinates.size();
+    }
+
+    public List<Coordinates> getGrabbedGoldCoordinates() {
+        return this.grabbedGoldCoordinates;
+    }
+
     // MODIFIERS
     public void setPlayerCoordinates(Coordinates playerCoordinates) {
         this.playerCoordinates = playerCoordinates;
@@ -78,6 +88,10 @@ public class Agent {
 
     public void addKnownGoldCoordinates(Coordinates goldCoordinates) {
         this.knownGoldCoordinates.add(goldCoordinates);
+    }
+
+    public void addGrabbedGoldCoordinates(Coordinates grabbedGoldCoordinates) {
+        this.grabbedGoldCoordinates.add(grabbedGoldCoordinates);
     }
 
     // UTILITY FUNCTIONS
