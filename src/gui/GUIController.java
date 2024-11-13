@@ -4,11 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import src.main.Agent;
 import src.main.Coordinates;
+import src.main.Map;
 
 public class GUIController {
     private GUI gameView;
     private Agent agent;
     private Coordinates playerPos;
+    private int numRows = Map.getInstance().getNumRows();
+    private int numCols = Map.getInstance().getNumColumns();
 
     public GUIController() {
         this.agent = Agent.getInstance();
@@ -41,7 +44,7 @@ public class GUIController {
         gameView.setDownListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (playerPos.x() < 4) {
+                if (playerPos.x() < numRows - 1) {
 
                     playerPos = new Coordinates(playerPos.x() + 1, playerPos.y());
                     agent.setPlayerCoordinates(playerPos);
@@ -73,7 +76,7 @@ public class GUIController {
         gameView.setRightListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (playerPos.y() < 4) {
+                if (playerPos.y() < numCols - 1) {
                     
                     playerPos = new Coordinates(playerPos.x(), playerPos.y() + 1);
                     agent.setPlayerCoordinates(playerPos);

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import src.main.Agent;
 import src.main.Coordinates;
+import src.main.Map;
 
 public class GUI {
 	
@@ -26,6 +27,9 @@ public class GUI {
     private static final Color gridcolor = new Color(229, 211, 179);
     private static final Color playerpos_tile = new Color(255, 251, 230);
     private static final Color visited_tiles_color = new Color(152, 117, 84 );
+
+    private int numRows = Map.getInstance().getNumRows();
+    private int numCols = Map.getInstance().getNumColumns();
     
     public GUI() {
         // initializing positions
@@ -193,9 +197,10 @@ public class GUI {
         });
 
         // Initialize a 5x5 grid
-        gridPanels = new JPanel[5][5];
-        for (int r = 0; r < 5; r++) {
-            for (int c = 0; c < 5; c++) {
+        panel.setLayout(new GridLayout(numRows, numCols, 5, 5));
+        gridPanels = new JPanel[numRows][numCols];
+        for (int r = 0; r < numRows; r++) {
+            for (int c = 0; c < numCols; c++) {
                 Coordinates newTile = new Coordinates(r, c);
 
                 JPanel gridPanel = new JPanel();
