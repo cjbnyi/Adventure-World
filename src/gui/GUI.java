@@ -7,6 +7,7 @@ import javax.swing.*;
 import src.main.Agent;
 import src.main.Coordinates;
 import src.main.Map;
+import src.main.PrologInterface;
 
 public class GUI {
 	
@@ -265,11 +266,12 @@ public class GUI {
         return panel;
     }
 
-    public void updateTile(Agent agent) {
+    public void updateTile() {
         ArrayList<Coordinates> breezePos = new ArrayList<>(agent.getKnownBreezeCoordinates());
         ArrayList<Coordinates> goldPos = new ArrayList<>(agent.getKnownGoldCoordinates());
         ArrayList<Coordinates> pitPos = new ArrayList<>(agent.getKnownPitCoordinates());
-        ArrayList<Coordinates> grabbedGoldPos = new ArrayList<>(agent.getGrabbedGoldCoordinates());
+        boolean isHome = agent.getIsHome();
+        boolean isUngrabbedGold = agent.getIsUngrabbedGold();
 
         Coordinates newPlayerPos = agent.getPlayerCoordinates();
         int row = newPlayerPos.x();
@@ -288,15 +290,21 @@ public class GUI {
         gridPanels[row][col].setComponentZOrder(character, 0);
 
         // Player can leave once it is at home
-        if (this.homePos.x() == newPlayerPos.x() && this.homePos.y() == newPlayerPos.y()) {
+        if (isHome) {
             leave.setEnabled(true);
             status.setText(" You are at home.");
         } else {
             leave.setEnabled(false);
         }
 
+        if (isUngrabbedGold) {
+            grabGold.setEnabled(true);
+        } else {
+            grabGold.setEnabled(false);
+        }
+
         // If the new position falls on a tile that is either the gold, breeze, or pit
-        if (breezePos.contains(newPlayerPos) && goldPos.contains(newPlayerPos) && !grabbedGoldPos.contains(newPlayerPos)) {
+        if (breezePos.contains(newPlayerPos) && goldPos.contains(newPlayerPos)) {
             JLabel breeze = new JLabel(new ImageIcon("resources/graphics/breeze.png"));
             JLabel gold = new JLabel(new ImageIcon("resources/graphics/gold.png"));
             gridPanels[row][col].setLayout(null);
@@ -305,7 +313,7 @@ public class GUI {
             gridPanels[row][col].add(breeze);
             gridPanels[row][col].add(gold);
             status.setText(" You perceive a glitter and a breeze.");
-            grabGold.setEnabled(true);
+            //grabGold.setEnabled(true);
         } else if (breezePos.contains(newPlayerPos)) {
             JLabel breeze = new JLabel(new ImageIcon("resources/graphics/breeze.png"));
             breeze.setBounds(5, 5, 76, 76);
@@ -313,25 +321,39 @@ public class GUI {
             gridPanels[row][col].setLayout(null);
             gridPanels[row][col].add(breeze);
             breeze.setBounds(5, 5, 76, 76);
-            grabGold.setEnabled(false);
-        } else if (goldPos.contains(newPlayerPos) && !grabbedGoldPos.contains(newPlayerPos)) {
+            //grabGold.setEnabled(false);
+        } else if (goldPos.contains(newPlayerPos)) {
             JLabel gold = new JLabel(new ImageIcon("resources/graphics/gold.png"));
             status.setText(" You perceive a  glitter.");
             gridPanels[row][col].setLayout(null);
             gridPanels[row][col].add(gold);
             gold.setBounds(5, 5, 76, 76);
-            grabGold.setEnabled(true);
+            //grabGold.setEnabled(true);
         } else if (pitPos.contains(newPlayerPos)) {
             JLabel pit = new JLabel(new ImageIcon("resources/graphics/pit.png"));
             pit.setBounds(5, 5, 76, 76);
             gridPanels[row][col].setLayout(null);
             gridPanels[row][col].add(pit);
             status.setText(" You fell into a pit.");
-            grabGold.setEnabled(false);
-        }  
+            gameOver("Mission failed! Player falls into a pit.");
+            //grabGold.setEnabled(false);
+        }
 
-        // Update current tile with the new position
+            // Update current tile with the new position
         playerPos = newPlayerPos; 
+    }
+
+    public void gameOver(String message) {
+        JOptionPane.showOptionDialog(null,
+                message,
+                "GAME OVER!",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                new Object[] { "OK" },
+                "OK");
+
+        this.frame.dispose();
     }
 
 
@@ -369,6 +391,9 @@ public class GUI {
         status.setText(" " + text);
     }
 
+    public JButton getGrabGold() {
+        return this.grabGold;
+    }
     public JFrame getFrame() {
         return this.frame;
     }

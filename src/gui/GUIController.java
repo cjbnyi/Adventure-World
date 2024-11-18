@@ -5,11 +5,13 @@ import java.awt.event.ActionListener;
 import src.main.Agent;
 import src.main.Coordinates;
 import src.main.Map;
+import src.main.PrologInterface;
 
 public class GUIController {
     private GUI gameView;
     private Agent agent;
     private Coordinates playerPos;
+    private PrologInterface prologInterface = new PrologInterface();
     private int numRows = Map.getInstance().getNumRows();
     private int numCols = Map.getInstance().getNumColumns();
 
@@ -32,9 +34,11 @@ public class GUIController {
 
                     playerPos = new Coordinates(playerPos.x() - 1, playerPos.y());
                     agent.setPlayerCoordinates(playerPos);
+
+                    prologInterface.updateAgent();
     
                     gameView.setStatus("You moved up.");
-                    updateScreen();
+                    gameView.updateTile();
                 } else {
                     gameView.setStatus("Invalid move.");
                 }
@@ -48,9 +52,11 @@ public class GUIController {
 
                     playerPos = new Coordinates(playerPos.x() + 1, playerPos.y());
                     agent.setPlayerCoordinates(playerPos);
+
+                    prologInterface.updateAgent();
                     
                     gameView.setStatus("You moved down.");
-                    updateScreen();
+                    gameView.updateTile();
                 } else {
                     gameView.setStatus("Invalid move.");
                 }
@@ -65,8 +71,10 @@ public class GUIController {
                     playerPos = new Coordinates(playerPos.x(), playerPos.y() - 1);
                     agent.setPlayerCoordinates(playerPos);
 
+                    prologInterface.updateAgent();
+
                     gameView.setStatus("You moved left.");
-                    updateScreen();
+                    gameView.updateTile();
                 } else {
                     gameView.setStatus(" Invalid move.");
                 }
@@ -81,8 +89,10 @@ public class GUIController {
                     playerPos = new Coordinates(playerPos.x(), playerPos.y() + 1);
                     agent.setPlayerCoordinates(playerPos);
 
+                    prologInterface.updateAgent();
+
                     gameView.setStatus("You moved right.");
-                    updateScreen();
+                    gameView.updateTile();
                 } else {
                     gameView.setStatus("Invalid move.");
                 }
@@ -92,9 +102,10 @@ public class GUIController {
         gameView.setGrabGoldListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {  
-                agent.addGrabbedGoldCoordinates(playerPos);
+                prologInterface.assertGrabGold();
+                gameView.getGrabGold().setEnabled(false);
 
-                gameView.setGold(agent.getNumOfGold());
+                gameView.setGold(prologInterface.getNumOfGold());
                 gameView.setStatus("You grabbed the gold.");
             }
         });
@@ -103,11 +114,19 @@ public class GUIController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 gameView.setStatus("You left home.");
+
+                int numGold = prologInterface.getNumOfGold();
+                int goalGold = numRows - 1;
+                int endGame;
+
+                if (numGold == goalGold) {
+                    gameView.gameOver("Mission accomplished! " + numGold + " coins collected.");
+
+                } else {
+                    gameView.gameOver("Mission failed! Only " + numGold + " coins collected.");
+
+                }
             }
         });
-    }
-
-    private void updateScreen() {
-        gameView.updateTile(agent);
     }
 }
