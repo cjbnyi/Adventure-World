@@ -304,7 +304,15 @@ public class GUI {
         }
 
         // If the new position falls on a tile that is either the gold, breeze, or pit
-        if (breezePos.contains(newPlayerPos) && goldPos.contains(newPlayerPos)) {
+        if (pitPos.contains(newPlayerPos)) {
+            JLabel pit = new JLabel(new ImageIcon("resources/graphics/pit.png"));
+            pit.setBounds(5, 5, 76, 76);
+            gridPanels[row][col].setLayout(null);
+            gridPanels[row][col].add(pit);
+            status.setText(" You fell into a pit.");
+            gameOver("Mission failed! Player falls into a pit.");
+            //grabGold.setEnabled(false);
+        } else if (breezePos.contains(newPlayerPos) && goldPos.contains(newPlayerPos)) {
             JLabel breeze = new JLabel(new ImageIcon("resources/graphics/breeze.png"));
             JLabel gold = new JLabel(new ImageIcon("resources/graphics/gold.png"));
             gridPanels[row][col].setLayout(null);
@@ -329,14 +337,6 @@ public class GUI {
             gridPanels[row][col].add(gold);
             gold.setBounds(5, 5, 76, 76);
             //grabGold.setEnabled(true);
-        } else if (pitPos.contains(newPlayerPos)) {
-            JLabel pit = new JLabel(new ImageIcon("resources/graphics/pit.png"));
-            pit.setBounds(5, 5, 76, 76);
-            gridPanels[row][col].setLayout(null);
-            gridPanels[row][col].add(pit);
-            status.setText(" You fell into a pit.");
-            gameOver("Mission failed! Player falls into a pit.");
-            //grabGold.setEnabled(false);
         }
 
             // Update current tile with the new position

@@ -12,7 +12,7 @@ public class Model {
 
     public void encodeFullMapInformation(FileReader fileReader) {
         prologInterface.encodeFullMapInformation(fileReader);
-
+        prologInterface.initializePL();
     }
 
     // GETTERS
