@@ -1,5 +1,9 @@
 package src.main;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  * Represents a map having static environment information.
  * Employs the Singleton design pattern.

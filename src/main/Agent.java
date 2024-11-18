@@ -17,7 +17,8 @@ public class Agent {
     private final ArrayList<Coordinates> knownPitCoordinates;
     private final ArrayList<Coordinates> knownBreezeCoordinates;
     private final ArrayList<Coordinates> knownGoldCoordinates;
-    private final ArrayList<Coordinates> grabbedGoldCoordinates;
+    private boolean isHome;
+    private boolean isUngrabbedGold;
 
     private Agent(Coordinates homeCoordinates) {
         this.playerCoordinates = homeCoordinates;
@@ -25,7 +26,6 @@ public class Agent {
         this.knownPitCoordinates = new ArrayList<>();
         this.knownBreezeCoordinates = new ArrayList<>();
         this.knownGoldCoordinates = new ArrayList<>();
-        this.grabbedGoldCoordinates = new ArrayList<>();
     }
 
     public static void initializeInstance(Coordinates homeCoordinates) {
@@ -65,13 +65,9 @@ public class Agent {
         return Collections.unmodifiableList(knownGoldCoordinates);
     }
 
-    public int getNumOfGold() {
-        return this.grabbedGoldCoordinates.size();
-    }
+    public boolean getIsHome() { return this.isHome; }
 
-    public List<Coordinates> getGrabbedGoldCoordinates() {
-        return this.grabbedGoldCoordinates;
-    }
+    public boolean getIsUngrabbedGold() { return this.isUngrabbedGold; }
 
     // MODIFIERS
     public void setPlayerCoordinates(Coordinates playerCoordinates) {
@@ -90,9 +86,11 @@ public class Agent {
         this.knownGoldCoordinates.add(goldCoordinates);
     }
 
-    public void addGrabbedGoldCoordinates(Coordinates grabbedGoldCoordinates) {
-        this.grabbedGoldCoordinates.add(grabbedGoldCoordinates);
-    }
+
+
+    public void setIsHome(boolean val) { isHome = val; }
+
+    public void setIsUngrabbedGold(boolean val) { isUngrabbedGold = val; }
 
     // UTILITY FUNCTIONS
     // TODO: Implement the method, printing necessary agent information for debugging purposes.
