@@ -66,15 +66,6 @@ public class PrologInterface {
         Agent.printAgentInformation();
     }
 
-    // TODO
-    /**
-     * Queries the knowledge base for new information given a player move.
-     */
-    public void queryNewInformation() {
-
-    }
-
-    // TODO
     /**
      * Updates the agent given new information.
      */
@@ -84,14 +75,6 @@ public class PrologInterface {
         hasGlitter();
         isHome();
         isUngrabbedGold();
-    }
-
-    // TODO
-    /**
-     * Updates the knowledge base given new information.
-     */
-    public static void updateKnowledgeBase() {
-
     }
 
     public void initializePL() {
@@ -271,6 +254,4 @@ public class PrologInterface {
             System.out.println("Failed to assert");
         }
     }
-
-    // TODO: Feel free to add/remove/modify methods here as you deem appropriate.
 }
