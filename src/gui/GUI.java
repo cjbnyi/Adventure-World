@@ -276,6 +276,7 @@ public class GUI {
         ArrayList<Coordinates> goldPos = new ArrayList<>(agent.getKnownGoldCoordinates());
         ArrayList<Coordinates> pitPos = new ArrayList<>(agent.getKnownPitCoordinates());
         ArrayList<Coordinates> adjacentTiles = new ArrayList<>(prologInterface.getAdjacentUnvisitedTiles());
+
         boolean isHome = agent.getIsHome();
         boolean isUngrabbedGold = agent.getIsUngrabbedGold();
 
@@ -293,6 +294,7 @@ public class GUI {
         // Update new tile color
         gridPanels[row][col].setBackground(playerpos_tile);
         gridPanels[row][col].add(character);
+
         gridPanels[row][col].setComponentZOrder(character, 0);
 
         // Player can leave once it is at home
@@ -312,29 +314,33 @@ public class GUI {
         // If the new position falls on a tile that is either the gold, breeze, or pit
         if (pitPos.contains(newPlayerPos)) {
             JLabel pit = new JLabel(new ImageIcon("resources/graphics/pit.png"));
+
             pit.setBounds(5, 5, 76, 76);
             gridPanels[row][col].setLayout(null);
-            gridPanels[row][col].add(pit);
+            gridPanels[row][col].add(pit);   
             status.setText(" You fell into a pit.");
             gameOver("Mission failed! Player falls into a pit.");
             //grabGold.setEnabled(false);
         } else if (breezePos.contains(newPlayerPos) && goldPos.contains(newPlayerPos)) {
             JLabel breeze = new JLabel(new ImageIcon("resources/graphics/breeze.png"));
             JLabel gold = new JLabel(new ImageIcon("resources/graphics/gold.png"));
+
             gridPanels[row][col].setLayout(null);
             breeze.setBounds(5, 45, 80, 40);
             gold.setBounds(5, 5, 80, 40);
             gridPanels[row][col].add(breeze);
             gridPanels[row][col].add(gold);
+
             status.setText(" You perceive a glitter and a breeze.");
             //grabGold.setEnabled(true);
             for (Coordinates c : adjacentTiles) {
                 if (gridPanels[c.x()][c.y()].getBackground() != Color.GREEN) {
-                    gridPanels[c.x()][c.y()].setBackground(Color.PINK);
+                    gridPanels[c.x()][c.y()].setBackground(Color.ORANGE);
                 }
             }
         } else if (breezePos.contains(newPlayerPos)) {
             JLabel breeze = new JLabel(new ImageIcon("resources/graphics/breeze.png"));
+
             breeze.setBounds(5, 5, 76, 76);
             status.setText(" You perceive a breeze.");
             gridPanels[row][col].setLayout(null);
@@ -343,14 +349,17 @@ public class GUI {
             //grabGold.setEnabled(false);
             for (Coordinates c : adjacentTiles) {
                 if (gridPanels[c.x()][c.y()].getBackground() != Color.GREEN) {
-                    gridPanels[c.x()][c.y()].setBackground(Color.PINK);
+                    gridPanels[c.x()][c.y()].setBackground(Color.ORANGE);
                 }
             }
         } else if (goldPos.contains(newPlayerPos)) {
             JLabel gold = new JLabel(new ImageIcon("resources/graphics/gold.png"));
+
             status.setText(" You perceive a  glitter.");
             gridPanels[row][col].setLayout(null);
             gridPanels[row][col].add(gold);
+            gridPanels[row][col].revalidate(); 
+            gridPanels[row][col].repaint();
             gold.setBounds(5, 5, 76, 76);
             //grabGold.setEnabled(true);
             for (Coordinates c : adjacentTiles) {
