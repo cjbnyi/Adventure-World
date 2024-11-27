@@ -34,17 +34,3 @@ has_breeze(X1, Y1) :-
 ungrabbed_gold(X1, Y1) :-
     gold(X1, Y1),
     \+ grab(X1, Y1).
-
-% Goals
-is_gold(X1, Y1) :-
-    has_glitter(X1, Y1).
-
-% Unclassified
-distance(X1, Y1, X2, Y2, D) :-
-    abs(X1 - X2) + abs(Y1 - Y2) =:= D.
-
-adjacent(X1, Y1, X2, Y2) :-
-    distance(X1, Y1, X2, Y2, 1).
-
-is_safe_tile(X, Y) :-
-    is_safe(X, Y).
