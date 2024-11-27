@@ -24,10 +24,10 @@ has_glitter(X1, Y1) :-
 has_breeze(X1, Y1) :-
     numRows(SizeX),
     numCols(SizeY),
-    ( Y1 < SizeY, Up is Y1 - 1,    pit(X1, Up)
-    ; Y1 > 0,     Down is Y1 + 1,  pit(X1, Down)
-    ; X1 < SizeX, Left is X1 - 1,  pit(Left, Y1)
-    ; X1 > 0,     Right is X1 + 1, pit(Right, Y1)
+    ( Y1 > 0,             Up is Y1 - 1,    pit(X1, Up)
+    ; Y1 < SizeY - 1,     Down is Y1 + 1,  pit(X1, Down)
+    ; X1 > 0,             Left is X1 - 1,  pit(Left, Y1)
+    ; X1 < SizeX - 1,     Right is X1 + 1, pit(Right, Y1)
     ).
 
 % Determinants
