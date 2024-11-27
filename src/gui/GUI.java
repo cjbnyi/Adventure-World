@@ -20,6 +20,7 @@ public class GUI {
     private JTextField totalGold = new JTextField();
     private JTextField status = new JTextField();
     private Agent agent = Agent.getInstance();
+    private PrologInterface prologInterface = new PrologInterface();
     
     private static final Color arrowbgcolor = new Color(202, 186, 156);
     private static final Color bgcolor = new Color(248, 238, 228);
@@ -199,19 +200,24 @@ public class GUI {
         // Initialize a 5x5 grid
         panel.setLayout(new GridLayout(numRows, numCols, 5, 5));
         gridPanels = new JPanel[numRows][numCols];
+        ArrayList<Coordinates> adjTiles = new ArrayList<>(prologInterface.getAdjacentUnvisitedTiles());
         for (int r = 0; r < numRows; r++) {
             for (int c = 0; c < numCols; c++) {
                 Coordinates newTile = new Coordinates(r, c);
 
                 JPanel gridPanel = new JPanel();
-                gridPanel.setBackground((newTile == playerPos) ? playerpos_tile : gridcolor); // Sets the color of the grid depending on player position
                 gridPanel.setLayout(null);
 
                 if (newTile.x() == playerPos.x() && newTile.y() == playerPos.y()) {
                     gridPanel.add(home);
                     gridPanel.add(character);
                     gridPanel.setComponentZOrder(character, 0);
-                } 
+                    gridPanel.setBackground(playerpos_tile);
+                } else if (adjTiles.contains(newTile)) {
+                    gridPanel.setBackground(Color.GREEN);
+                } else {
+                    gridPanel.setBackground(gridcolor);
+                }
 
                 panel.add(gridPanel);
                 gridPanels[r][c] = gridPanel;
@@ -269,6 +275,7 @@ public class GUI {
         ArrayList<Coordinates> breezePos = new ArrayList<>(agent.getKnownBreezeCoordinates());
         ArrayList<Coordinates> goldPos = new ArrayList<>(agent.getKnownGoldCoordinates());
         ArrayList<Coordinates> pitPos = new ArrayList<>(agent.getKnownPitCoordinates());
+        ArrayList<Coordinates> adjacentTiles = new ArrayList<>(prologInterface.getAdjacentUnvisitedTiles());
         boolean isHome = agent.getIsHome();
         boolean isUngrabbedGold = agent.getIsUngrabbedGold();
 
@@ -321,6 +328,9 @@ public class GUI {
             gridPanels[row][col].add(gold);
             status.setText(" You perceive a glitter and a breeze.");
             //grabGold.setEnabled(true);
+            for (Coordinates c : adjacentTiles) {
+                gridPanels[c.x()][c.y()].setBackground(Color.PINK);
+            }
         } else if (breezePos.contains(newPlayerPos)) {
             JLabel breeze = new JLabel(new ImageIcon("resources/graphics/breeze.png"));
             breeze.setBounds(5, 5, 76, 76);
@@ -329,6 +339,9 @@ public class GUI {
             gridPanels[row][col].add(breeze);
             breeze.setBounds(5, 5, 76, 76);
             //grabGold.setEnabled(false);
+            for (Coordinates c : adjacentTiles) {
+                gridPanels[c.x()][c.y()].setBackground(Color.PINK);
+            }
         } else if (goldPos.contains(newPlayerPos)) {
             JLabel gold = new JLabel(new ImageIcon("resources/graphics/gold.png"));
             status.setText(" You perceive a  glitter.");
@@ -336,6 +349,19 @@ public class GUI {
             gridPanels[row][col].add(gold);
             gold.setBounds(5, 5, 76, 76);
             //grabGold.setEnabled(true);
+            for (Coordinates c : adjacentTiles) {
+                gridPanels[c.x()][c.y()].setBackground(Color.GREEN);
+            }
+        } else {
+            for (Coordinates c : adjacentTiles) {
+                gridPanels[c.x()][c.y()].setBackground(Color.GREEN);
+            }
+        }
+
+        for (Coordinates c : adjacentTiles) {
+            if (PrologInterface.isUnsafe(c.x(), c.y())) {
+                gridPanels[c.x()][c.y()].setBackground(Color.RED);
+            }
         }
 
             // Update current tile with the new position

@@ -4,9 +4,10 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jpl7.*;
-import org.jpl7.Integer;
 
 public class PrologInterface {
     /**
@@ -66,6 +67,7 @@ public class PrologInterface {
         hasGlitter();
         isHome();
         isUngrabbedGold();
+        visitedCoordinate();
     }
 
     private void consultPL() {
@@ -90,6 +92,10 @@ public class PrologInterface {
                 char tile = map.getMapInfo()[i][j];
                 if (tile == 'H') {
                     queryString = "assert(home(" + i + ", " + j + ")).\n";
+                    query = new Query(queryString);
+                    query.hasSolution();
+
+                    queryString = "assert(visited(" + i + ", " + j + ")).\n";
                     query = new Query(queryString);
                     query.hasSolution();
                 } else if (tile == 'G') {
@@ -123,6 +129,7 @@ public class PrologInterface {
         Query retractPit = new Query("retractall(pit(_)).");
         Query retractGold = new Query("retractall(gold(_)).");
         Query retractBreeze = new Query("retractall(breeze(_)).");
+        Query retractVisited = new Query("retractall(visited(_)).");
 
         retractWinner.hasSolution();
         retractRows.hasSolution();
@@ -131,6 +138,7 @@ public class PrologInterface {
         retractGold.hasSolution();
         retractPit.hasSolution();
         retractBreeze.hasSolution();
+        retractVisited.hasSolution();
     }
 
     private void hasBreeze() {
@@ -202,7 +210,7 @@ public class PrologInterface {
 
         if (query.hasSolution()) {
             Term solution = query.oneSolution().get("Count");
-            numGold = ((Integer) solution).intValue();
+            numGold = solution.intValue();
             System.out.println("Number of grabbed gold: " + numGold);
         } else {
             System.out.println("Query failed.");
@@ -220,6 +228,28 @@ public class PrologInterface {
         return query.hasSolution();
     }
 
+    public static boolean isSafe() {
+        Agent agent = Agent.getInstance();
+        int x = agent.getPlayerCoordinates().x();
+        int y = agent.getPlayerCoordinates().y();
+
+        String queryString = "is_safe(" + x + ", " + y +")";
+        Query query = new Query(queryString);
+
+        return query.hasSolution();
+    }
+
+    private void visitedCoordinate() {
+        Agent agent = Agent.getInstance();
+        int x = agent.getPlayerCoordinates().x();
+        int y = agent.getPlayerCoordinates().y();
+
+        String queryString = "assert(visited(" + x + ", " + y +")).";
+        Query query = new Query(queryString);
+
+        query.hasSolution();
+    }
+
     public void assertGrabGold() {
         Agent agent = Agent.getInstance();
         int x = agent.getPlayerCoordinates().x();
@@ -234,4 +264,66 @@ public class PrologInterface {
             System.out.println("Failed to assert");
         }
     }
+
+    private boolean isVisited(int x, int y) {
+        String queryString = "visited(" + x + ", " + y +")";
+        Query query = new Query(queryString);
+
+        return query.hasSolution();
+    }
+
+    public static boolean isUnsafe(int x, int y) {
+        String queryString = "is_unsafe(" + x + ", " + y +")";
+        Query query = new Query(queryString);
+
+        return query.hasSolution();
+    }
+
+    public ArrayList<Coordinates> getAdjacentUnvisitedTiles() {
+        ArrayList<Coordinates> adjacentTiles = getAdjacentTiles();
+        ArrayList<Coordinates> unvisitedTiles = new ArrayList<>();
+        int x, y;
+        
+        for (Coordinates c : adjacentTiles) {
+            x = c.x();
+            y = c.y();
+
+            if (!isVisited(x, y)) {
+                unvisitedTiles.add(new Coordinates(x, y));
+                System.out.print(c.x() + " ");
+                System.out.print(c.y());
+                System.out.println();
+            }
+        }
+
+        return unvisitedTiles;
+    }
+
+    public ArrayList<Coordinates> getAdjacentTiles() {
+        Agent agent = Agent.getInstance();
+        int x = agent.getPlayerCoordinates().x();
+        int y = agent.getPlayerCoordinates().y();
+    
+        ArrayList<Coordinates> coordinateList = new ArrayList<>();
+    
+        Query query = new Query("adjacent_tile(" + x + ", " + y + ", AdjX, AdjY)");
+        int adjX, adjY;
+
+        while (query.hasMoreSolutions()) {
+            java.util.Map<String, Term> solution = query.nextSolution();
+            
+            Term adjXTerm = solution.get("AdjX");
+            Term adjYTerm = solution.get("AdjY");
+    
+            adjX = adjXTerm.intValue();
+            adjY = adjYTerm.intValue();
+
+            if (Coordinates.isValidCoordinates(adjX, adjY)) {
+                coordinateList.add(new Coordinates(adjX, adjY));
+            }
+        }
+    
+        return coordinateList;
+    }
+    
 }
