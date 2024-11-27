@@ -13,7 +13,7 @@ public class GUI {
 	
     private JFrame frame;
     private JPanel[][] gridPanels; // Store grid panels to update colors later
-    private Coordinates homePos, playerPos;
+    private Coordinates playerPos;
     private JButton upArrow, downArrow, leftArrow, rightArrow, grabGold, leave;
     private JLabel character = new JLabel(new ImageIcon("resources/graphics/leprechaun.png"));
     private JLabel home = new JLabel(new ImageIcon("resources/graphics/home.png"));
@@ -35,7 +35,6 @@ public class GUI {
     public GUI() {
         // initializing positions
         this.playerPos = agent.getHomeCoordinates();
-        this.homePos = agent.getHomeCoordinates();
 
         // layout adjustments
         this.character.setBounds(5, 5, 76, 76);
@@ -353,6 +352,7 @@ public class GUI {
                 new Object[] { "OK" },
                 "OK");
 
+        PrologInterface.retractOldKnowledge();
         this.frame.dispose();
     }
 

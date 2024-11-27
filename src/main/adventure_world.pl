@@ -1,4 +1,10 @@
+:- dynamic is_winner/4.
+:- dynamic pit/2.
+:- dynamic gold/2.
+:- dynamic breeze/2.
 :- dynamic grab/2.
+:- dynamic numRows/1.
+:- dynamic numCols/1.
 
 % Sensors
 is_safe(X, Y) :-
@@ -12,18 +18,19 @@ is_home(X, Y) :-
 is_pit(X, Y) :-
     pit(X, Y).
 
+has_glitter(X1, Y1) :-
+    gold(X1, Y1).
+
 has_breeze(X1, Y1) :-
-    SizeX = 5,
-    SizeY = 5,
+    numRows(SizeX),
+    numCols(SizeY),
     ( Y1 < SizeY, Up is Y1 - 1,    pit(X1, Up)
     ; Y1 > 0,     Down is Y1 + 1,  pit(X1, Down)
     ; X1 < SizeX, Left is X1 - 1,  pit(Left, Y1)
     ; X1 > 0,     Right is X1 + 1, pit(Right, Y1)
     ).
 
-has_glitter(X1, Y1) :-
-    gold(X1, Y1).
-
+% Determinants
 ungrabbed_gold(X1, Y1) :-
     gold(X1, Y1),
     \+ grab(X1, Y1).

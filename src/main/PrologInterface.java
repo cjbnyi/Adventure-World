@@ -12,13 +12,6 @@ public class PrologInterface {
     /**
      * Encodes full map information given a FileReader to the chosen map .txt file.
      */
-    public PrologInterface() {
-        String plPath = "src/main/adventure_world.pl";
-        Query consultQuery = new Query("consult", new Term[] { new Atom(plPath) });
-
-        consultQuery.hasSolution();
-    }
-
     public void encodeFullMapInformation(FileReader fileReader) {
 
         int character;
@@ -58,12 +51,10 @@ public class PrologInterface {
         Map.initializeInstance(numRows, numColumns, mapInfo);
         Agent.initializeInstance(new Coordinates(xHome, yHome));
 
-        // For debugging purposes
-        Map.printMapInformation();
-        assertInitialKnowledge();
+        Map.printMapInformation();  // For debugging purposes
+        consultPL();
         isHome();
         isUngrabbedGold();
-        Agent.printAgentInformation();
     }
 
     /**
@@ -77,62 +68,13 @@ public class PrologInterface {
         isUngrabbedGold();
     }
 
-    public void initializePL() {
-        Map map = Map.getInstance();
-        int numRows = map.getNumRows();
-        int numColumns = map.getNumColumns();
-        String filePath = "src/main/adventure_world.pl";
+    private void consultPL() {
+        Query consultQuery = new Query("consult('src/main/adventure_world.pl')");
 
-        // Define the content to write to the Prolog file
-        String prologContent = ":- dynamic grab/2.\n" +
-                "\n" +
-                "% Sensors\n" +
-                "is_safe(X, Y) :-\n" +
-                "    \\+ pit(X, Y).\n" +
-                "\n" +
-                "is_home(X, Y) :-\n" +
-                "    \\+ gold(X, Y),\n" +
-                "    \\+ breeze(X, Y),\n" +
-                "    is_safe(X, Y).\n" +
-                "\n" +
-                "is_pit(X, Y) :-\n" +
-                "    pit(X, Y).\n" +
-                "\n" +
-                "has_breeze(X1, Y1) :-\n" +
-                "    SizeX = " + numRows + ",\n" +
-                "    SizeY = " + numColumns + ",\n" +
-                "    ( Y1 < SizeY, Up is Y1 - 1,    pit(X1, Up)\n" +
-                "    ; Y1 > 0,     Down is Y1 + 1,  pit(X1, Down)\n" +
-                "    ; X1 < SizeX, Left is X1 - 1,  pit(Left, Y1)\n" +
-                "    ; X1 > 0,     Right is X1 + 1, pit(Right, Y1)\n" +
-                "    ).\n" +
-                "\n" +
-                "has_glitter(X1, Y1) :-\n" +
-                "    gold(X1, Y1).\n" +
-                "\n" +
-                "ungrabbed_gold(X1, Y1) :-\n" +
-                "    gold(X1, Y1),\n" +
-                "    \\+ grab(X1, Y1).\n" +
-                "\n" +
-                "% Goals\n" +
-                "is_gold(X1, Y1) :-\n" +
-                "    has_glitter(X1, Y1).\n" +
-                "\n" +
-                "% Unclassified\n" +
-                "distance(X1, Y1, X2, Y2, D) :-\n" +
-                "    abs(X1 - X2) + abs(Y1 - Y2) =:= D.\n" +
-                "\n" +
-                "adjacent(X1, Y1, X2, Y2) :-\n" +
-                "    distance(X1, Y1, X2, Y2, 1).\n" +
-                "\n" +
-                "is_safe_tile(X, Y) :-\n" +
-                "    is_safe(X, Y).";
+        if (consultQuery.hasSolution()) {
+            System.out.println("\nSuccessfully consulted adventure_world.pl");
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            writer.write(prologContent);
-            System.out.println("Prolog file written successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
+            assertInitialKnowledge();
         }
     }
 
@@ -161,6 +103,34 @@ public class PrologInterface {
                 }
             }
         }
+
+        // Assert facts
+        Query assertWinner = new Query("assert(is_winner(" + (numRows - 1) +")).");
+        Query assertRows = new Query("assert(numRows(" + numRows +")).");
+        Query assertColumns = new Query("assert(numCols(" + numRows +")).");
+
+        if (assertWinner.hasSolution() && assertRows.hasSolution() && assertColumns.hasSolution()) {
+            System.out.println("Facts successfully asserted.\n");
+        }
+
+    }
+
+    public static void retractOldKnowledge() {
+        Query retractWinner = new Query("retract(is_winner(_)).");
+        Query retractRows = new Query("retract(numRows(_)).");
+        Query retractColumns = new Query("retract(numCols(_)).");
+        Query retractGrab = new Query("retractall(grab(_)).");
+        Query retractPit = new Query("retractall(pit(_)).");
+        Query retractGold = new Query("retractall(gold(_)).");
+        Query retractBreeze = new Query("retractall(breeze(_)).");
+
+        retractWinner.hasSolution();
+        retractRows.hasSolution();
+        retractColumns.hasSolution();
+        retractGrab.hasSolution();
+        retractGold.hasSolution();
+        retractPit.hasSolution();
+        retractBreeze.hasSolution();
     }
 
     private void hasBreeze() {
@@ -238,6 +208,16 @@ public class PrologInterface {
             System.out.println("Query failed.");
         }
         return numGold;
+    }
+
+    public boolean isWinner() {
+        Agent agent = Agent.getInstance();
+        int x = getNumOfGold();
+
+        String queryString = "is_winner(" + x + ")";
+        Query query = new Query(queryString);
+
+        return query.hasSolution();
     }
 
     public void assertGrabGold() {

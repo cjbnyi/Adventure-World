@@ -116,15 +116,12 @@ public class GUIController {
                 gameView.setStatus("You left home.");
 
                 int numGold = prologInterface.getNumOfGold();
-                int goalGold = numRows - 1;
-                int endGame;
 
-                if (numGold == goalGold) {
+                if (prologInterface.isWinner()) {
                     gameView.gameOver("Mission accomplished! " + numGold + " coins collected.");
 
                 } else {
                     gameView.gameOver("Mission failed! Only " + numGold + " coins collected.");
-
                 }
             }
         });

@@ -91,11 +91,4 @@ public class Agent {
     public void setIsHome(boolean val) { isHome = val; }
 
     public void setIsUngrabbedGold(boolean val) { isUngrabbedGold = val; }
-
-    // UTILITY FUNCTIONS
-    // TODO: Implement the method, printing necessary agent information for debugging purposes.
-    public static void printAgentInformation() {
-        System.out.println("\n[Printing agent information]");
-        System.out.println("printAgentInformation() to be implemented!");
-    }
 }
