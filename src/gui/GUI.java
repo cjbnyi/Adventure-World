@@ -329,7 +329,9 @@ public class GUI {
             status.setText(" You perceive a glitter and a breeze.");
             //grabGold.setEnabled(true);
             for (Coordinates c : adjacentTiles) {
-                gridPanels[c.x()][c.y()].setBackground(Color.PINK);
+                if (gridPanels[c.x()][c.y()].getBackground() != Color.GREEN) {
+                    gridPanels[c.x()][c.y()].setBackground(Color.PINK);
+                }
             }
         } else if (breezePos.contains(newPlayerPos)) {
             JLabel breeze = new JLabel(new ImageIcon("resources/graphics/breeze.png"));
@@ -340,7 +342,9 @@ public class GUI {
             breeze.setBounds(5, 5, 76, 76);
             //grabGold.setEnabled(false);
             for (Coordinates c : adjacentTiles) {
-                gridPanels[c.x()][c.y()].setBackground(Color.PINK);
+                if (gridPanels[c.x()][c.y()].getBackground() != Color.GREEN) {
+                    gridPanels[c.x()][c.y()].setBackground(Color.PINK);
+                }
             }
         } else if (goldPos.contains(newPlayerPos)) {
             JLabel gold = new JLabel(new ImageIcon("resources/graphics/gold.png"));

@@ -42,14 +42,15 @@ adjacent_tile(X, Y, AdjX, AdjY) :-
 is_unsafe(X1, Y1) :-
     numRows(SizeX),
     numCols(SizeY),
-    (Y1 > 0, Up is Y1 - 1, has_breeze(X1, Up), visited(X1, Up)),
-    (Y1 < SizeY - 1, Down is Y1 + 1, has_breeze(X1, Down), visited(X1, Down)),
-    (X1 > 0, Left is X1 - 1, has_breeze(Left, Y1), visited(Left, Y1)),
-    (X1 < SizeX - 1, Right is X1 + 1, has_breeze(Right, Y1), visited(Right, Y1)).
+    (Y1 > 0 -> (Up is Y1 - 1, has_breeze(X1, Up), visited(X1, Up)) ; true),
+    (Y1 < SizeY - 1 -> (Down is Y1 + 1, has_breeze(X1, Down), visited(X1, Down)) ; true),
+    (X1 > 0 -> (Left is X1 - 1, has_breeze(Left, Y1), visited(Left, Y1)) ; true),
+    (X1 < SizeX - 1 -> (Right is X1 + 1, has_breeze(Right, Y1), visited(Right, Y1)) ; true).
+
 
 
 is_winner(X) :-
-    X > 2.
+    X > 1.
 
 % Determinants
 ungrabbed_gold(X1, Y1) :-

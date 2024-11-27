@@ -290,9 +290,6 @@ public class PrologInterface {
 
             if (!isVisited(x, y)) {
                 unvisitedTiles.add(new Coordinates(x, y));
-                System.out.print(c.x() + " ");
-                System.out.print(c.y());
-                System.out.println();
             }
         }
 

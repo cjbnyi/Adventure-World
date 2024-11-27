@@ -121,7 +121,7 @@ public class GUIController {
                     gameView.gameOver("Mission accomplished! " + numGold + " coins collected.");
 
                 } else {
-                    gameView.gameOver("Mission failed! Only " + numGold + " coins collected.");
+                    gameView.gameOver("Mission failed! Only " + numGold + " coin(s) collected.");
                 }
             }
         });
